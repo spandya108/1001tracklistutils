@@ -5,8 +5,12 @@ from splinter.exceptions import ElementDoesNotExist
 
 class TrackListScrapeHandler(object):
 
-    def execute_scrape(self, artists, year):
-        scraper = TrackListScraper(artists, year)
+    def __init__(self, artists, year):
+        self.artists = artists
+        self.year = year
+
+    def execute_scrape(self):
+        scraper = TrackListScraper(self.artists, self.year)
         full_list = scraper.execute_full_scrape()
         return full_list
 
@@ -43,7 +47,6 @@ class TrackListScraper(object):
 
     def get_track_list_for_set(self, artist):
         soup = BeautifulSoup(self.browser.html)
-
         track_values = soup.find_all('div', class_='trackValue')
 
         track_strings = []
@@ -62,3 +65,4 @@ class TrackListScraper(object):
         track_info = track_string.strip().split('-')
         for i in range(len(track_info)):
             track_info[i] = track_info[i].strip()
+        return track_info
